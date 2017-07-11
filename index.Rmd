@@ -1,0 +1,40 @@
+---
+output: html_document
+---
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57101844-4', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
+```
+
+## Introduction
+
+You can find some projects both professional and pet projects in my [respositories.](https://github.com/llrs?tab=repositories)
+
+# Pet projects
+
+Projects I do on my own time, which eventually I hope will benefit me:
+
+ - [Bioconductor stats:](https://llrs.github.com/BiocStats/) Analysing the relationship between downloads, IPs and the package in Bioconductor.
+ - [WGCNA:](https://llrs.github.com/WGCNA/) Adding examples, tests and using roxygen in the WGCNA package.
+ - [topGO:](https://github.com/llrs/topGO) Correcting some errors in the topGO package of Bioconductor.
+ - [GOSemSim:](https://github.com/llrs/GOSemSim) Forked to improve some methods and add some others.
+ 
+# Serious projects
+
+Software projects I developed/contributed:
+
+ - [BioCor:](https://bioconductor.org/packages/BioCor) An R package to calculate functional similarities thorough pathways. 
+ - [BrokerMaster:](https://github.com/llrs/BrokerMaster) A website to link projects and investigators with master students
+ - [IEO:](https:://llrs.github.com/IEO/IEO_report.html) Analysis of the thyroid carcinoma data from the TCGA project.
