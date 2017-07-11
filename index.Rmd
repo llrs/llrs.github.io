@@ -1,4 +1,7 @@
 ---
+title: "Repositories"
+author: "llrs"
+date: "`r BiocStyle::doc_date()`"
 output: html_document
 ---
 
