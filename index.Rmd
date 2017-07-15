@@ -38,6 +38,6 @@ Projects I do on my own time, which eventually I hope will benefit me:
 
 Software projects I developed/contributed:
 
- - [BioCor:](https://bioconductor.org/packages/BioCor) An R package to calculate functional similarities thorough pathways. 
+ - [BioCor:](https://bioconductor.org/packages/BioCor) An R package to calculate functional similarities thorough pathways. You can find some applications [here](vignette2.html)
  - [BrokerMaster:](https://github.com/llrs/BrokerMaster) A website to link projects and investigators with master students
  - [IEO:](https:://llrs.github.com/IEO/IEO_report.html) Analysis of the thyroid carcinoma data from the TCGA project.
