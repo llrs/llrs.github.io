@@ -15,7 +15,7 @@ author:
 - name: Lluís Revilla
   affiliation: 
     - IDIBAPS; Liver Unit, Hospital Clinic; Universitat Pompeu Fabra
-  email: lrevilla@clinic.cat
+  email: lluis.revilla@gmail.com
 vignette: >
   %\VignetteIndexEntry{Advanced usage of BioCor}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,18 +23,19 @@ vignette: >
 ---
 ```{r knitsetup, message=FALSE, warning=FALSE, include=FALSE}
 knitr::opts_knit$set(root.dir = ".")
-knitr::opts_chunk$set(collapse = TRUE, warning = TRUE, fig.wide = TRUE)
+knitr::opts_chunk$set(collapse = TRUE, warning = TRUE, fig.wide = TRUE, cache = TRUE)
 BiocStyle::markdown()
 library("BiocStyle")
 ```
 
 # Assesing a differential study
+In this example we will use the functional similarities in a classical differential study.
 
-## Simulating data
-We start using some standard library of data from the [RNAseq workflow](http://bioconductor.org/help/workflows/rnaseqGene/#differential-expression-analysis):
+## Obtaining data
+We start using data from the [RNAseq workflow](http://bioconductor.org/help/workflows/rnaseqGene/#differential-expression-analysis) and following the analysis:
 
 ```{r simulate, fig.cap="Volcano plot. The airway data", fig.wide = TRUE}
-library("airway")
+suppressPackageStartupMessages(library("airway"))
 data("airway")
 library("DESeq2")
 
@@ -46,6 +47,7 @@ summary(res)
 plot(res$log2FoldChange, -log10(res$padj), pch = 16, xlab = "log2FC", 
      ylab = "-log10(p.ajd)", main = "Untreated vs treated")
 ```
+As we can see here there are around 4000 genes differentially expressed genes
 
 ## Testing the different methods
 
@@ -87,7 +89,7 @@ In general all the methods output similar plots, except the "max" method. Also n
 
 ## Selecting differentially expressed genes
 
-First to reduce the complexity we reduce to 400 genes with a known fold change.
+First to reduce the complexity we reduce to 400 genes with a known fold change to speed the calculations. The resulting plots must not be taken as an example of what it should happen or look like in a real analysis, they are just ilustrative. 
 ```{r setting}
 set.seed(220)
 subRes <- res[!is.na(res$log2FoldChange), ]
@@ -129,7 +131,7 @@ b <- boot(data = gS, R = 1000, statistic= function(x, i){
 hist(b$t, main = "Distribution of scores", xlab = "Similarity score")
 abline(v=scoreW, col = "red")
 ```
-We can see that we would expect a score around `r scoreW` if we selected randomly the genes from our pool with a probability of `r p.val`.  
+We can see that we would expect a score around `r scoreW` if we selected randomly the genes from our pool with a probability of `r p.val`. That means that our pool of differentially expressed genes is highly similar to  what would be expected. 
 
 ## Influence of the fold change in the funtionally similarity of the genes
 We have seen that the genes differentially expressed are not selected by functional similarity but never the less they are related functionally. Now we could want to know when does this similarity appear when selecting a fold change as threshold.
@@ -181,7 +183,7 @@ genesReact2 <- genesReact
 genesReact2[genes[deg]] <- sapply(genesReact[genes[deg]], function(x){c(x, "deg")})
 Ecdf(c(mgeneSim(unique(genes[rownames(subRes)]), genesReact), 
        mgeneSim(unique(genes[rownames(subRes)]), genesReact2)), 
-     group = c(rep("Reactome", length(gS)), rep("Modified", length(gS)),), 
+     group = c(rep("Reactome", length(gS)), rep("Modified", length(gS))), 
      col = c("black", "red"), xlab = "Functional similarities", main = "ecdf")
 ```
 
@@ -230,10 +232,10 @@ lengths(miRNAs)
 ```
 Now we have selected our miRNAs we can compare them using a cluster approach.
 ```{r miRNA2}
-(cluster1 <- mclusterSim(miRNAs, genesReact, method = "BMA"))
-(cluster2 <- mclusterGeneSim(miRNAs, genesReact))
+cluster1 <- BioCor::mclusterSim(miRNAs, genesReact, method = "BMA")
+cluster1[1:10, 1:5]
 ```
-So for instance `r m <- which(cluster2 == max(as.dist(cluster2)), arr.ind = TRUE); rownames(m)[m[, 1] != m[, 2]]` are functionally related despite being from different families. 
+So for instance `r m <- which(cluster1 == max(as.dist(cluster1)), arr.ind = TRUE); rownames(m)[m[, 1] != m[, 2]]` are functionally related despite being from different families. 
 
 # Comparing with GO similarities
 
@@ -257,20 +259,7 @@ hist(as.dist(gS2[keep, keep]-gsGO), main = "Reactome",
 hist(as.dist(gSK2[keep, keep]-gsGO), main = "Kegg",
      xlab = "Functional similarity - biological process similarity")
 ```
-Both databases show the same trend (with this few genes). We can compare the similarities across each ontology.
-```{r GOSemSim3, fig.cap="Comparing the GO similarities."}
-par(mfrow = c(1, 3))
-CC <- godata('org.Hs.eg.db', ont="CC", computeIC=TRUE)
-gsGOCC <- GOSemSim::mgeneSim(rownames(gS), semData = CC, measure = "Resnik", verbose = FALSE)
-keep <- intersect(rownames(gsGO), rownames(gsGOCC))
-hist(gsGOCC[keep, keep]-gsGO[keep, keep], main = "CC vs BP", xlab = "Similarity")
-MF <- godata('org.Hs.eg.db', ont="MF", computeIC=TRUE)
-gsGOMF <- GOSemSim::mgeneSim(rownames(gS), semData = MF, measure = "Resnik", verbose = FALSE)
-keep2 <- intersect(rownames(gsGOCC), rownames(gsGOMF))
-hist(gsGOCC[keep2, keep2]-gsGOMF[keep2, keep2], main = "CC vs MF", xlab = "Similarity")
-keep3 <- intersect(rownames(gsGO), rownames(gsGOMF))
-hist(gsGO[keep3, keep3]-gsGOMF[keep3, keep3], main = "BP vs MF", xlab = "Similarity")
-```
+Both databases show the same trend, the difference follow a beta distribution. 
 
 # Session Info {.unnumbered}
 
