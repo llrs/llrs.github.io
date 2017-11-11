@@ -2,7 +2,13 @@
 title: "Repositories"
 author: "llrs"
 date: "`r BiocStyle::doc_date()`"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: 
+      collapsed: false
+      smooth_scroll: false
 ---
 
 <script>
@@ -21,23 +27,54 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
 ```
 
-## Introduction
+# Projects
 
-You can find some projects both professional and pet projects in my [respositories.](https://github.com/llrs?tab=repositories)
+You can find [here](https://github.com/llrs?tab=repositories) my repositories. Some of them are projects worth mentioning. This projects are part of my daily work while others I enjoy developing at my own time. They are not chronologically ordered or by any special order.
 
-# Pet projects
+## [Bioconductor stats](https://llrs.github.com/BiocStats/) 
 
-Projects I do on my own time, which eventually I hope will benefit me:
+**Purpose**:  Analysing packages in Bioconductor by their downloads, IPs and the question for support.
 
- - [Bioconductor stats:](https://llrs.github.com/BiocStats/) Analysing the relationship between downloads, IPs and the package in Bioconductor.
- - [WGCNA:](https://llrs.github.com/WGCNA/) Adding examples, tests and using roxygen in the WGCNA package.
- - [topGO:](https://github.com/llrs/topGO) Correcting some errors in the topGO package of Bioconductor.
- - [GOSemSim:](https://github.com/llrs/GOSemSim) Forked to improve some methods and add some others.
- 
-# Serious projects
+This project is to compare how well the packages in Bioconductor work, track the raise and fall of package usage and how much does affect having a good support. 
+    
+## [WGCNA](https://llrs.github.com/WGCNA/) 
 
-Software projects I developed/contributed:
+**Purpose**: Adding examples, tests and using roxygen in the WGCNA package.  
 
- - [BioCor:](https://bioconductor.org/packages/BioCor) An R package to calculate functional similarities thorough pathways. You can find some applications [here](vignette2.html)
- - [BrokerMaster:](https://github.com/llrs/BrokerMaster) A website to link projects and investigators with master students
- - [IEO:](https:://llrs.github.com/IEO/IEO_report.html) Analysis of the thyroid carcinoma data from the TCGA project.
+[WGCNA](https://labs.genetics.ucla.edu/horvath/CoexpressionNetwork/Rpackages/WGCNA/) let create weighted correlation network analysis. However it doesn't have test and the documentation I found it sometimes confusing (although abundant). With this project I learned how to contribute to a project (Avoid big modifications!!) and to read someone else code. 
+    
+##  [topGO](https://github.com/llrs/topGO) 
+
+**Purpose**: Correcting some errors in the topGO package of Bioconductor.  
+
+topGO is the only tool I found that takes into account the DAG structure of GO to calculate the enrichment scores. However is not longer developed nor maintained since Oct 10, 2011, althoguh the maintainer updated the mail in 2014. I try to update and understand how it is implemented to correct bugs. 
+    
+##  [BioCor](https://bioconductor.org/packages/BioCor) 
+
+**Purpose**: A package to calculate functional similarities thorough pathways.  
+
+I developed this package as part of my master thesis. You can find some how to use it in a [vignette](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/BioCor.html) and the applications in [another one](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/vignette2.html).   
+    
+##  [GOSemSim](https://github.com/llrs/GOSemSim) 
+
+**Purpose**: Calculate similarities between genes using [gene ontologies](http://www.geneontology.org/)
+
+I contributed by speeding calculations in several functions, improving the implementation of the algorithms. I am officially a contributor of the [official repository](https://github.com/GuangchuangYu/GOSemSim).
+    
+##  [BrokerMaster](https://github.com/llrs/BrokerMaster) 
+
+**Purpose**: A website to link projects and investigators with master students to improve the process in our master.
+
+This was a project (for a subject in the master) to learn how to use databases and create websites.
+    
+## [Analysis of the thyroid carcinoma data from the TCGA project](https://llrs.github.com/IEO/IEO_report.html) 
+
+**Purpose**: Find why women have more thyroid carcinoma.
+
+This analysis was part of a subject for my master. The respository with the data and output is [here](https://github.com/llrs/IEO).  
+    
+## [Rhea](https://github.com/llrs/Rhea) 
+
+**Purpose**: Remove bugs for the [main repository](https://github.com/Lagkouvardos/Rhea).  
+
+For a collaboration we are using this software, as it is aimed to be user-friendly I introduced some changes that helped my team mates. 
