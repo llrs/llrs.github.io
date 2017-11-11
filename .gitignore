@@ -1,10 +1,5 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
-*.BACKUP.*
-*.BASE.*
-*.LOCAL.*
-*.REMOTE.*
-*.orig
-*.Rproj
+*
+
+!*.Rmd
+!*.html
+
