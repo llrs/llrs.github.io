@@ -1,0 +1,61 @@
+---
+title: "Comments on BioCor"
+author: "llrs"
+date: "`r BiocStyle::doc_date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: 
+      collapsed: false
+      smooth_scroll: false
+---
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57101844-4', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
+```
+
+# Introduction
+
+
+This page is about some ideas I would like to explore related to my package [BioCor](https://github.com/llrs/BioCor) ([or in Bioconductor](https://bioconductor.org/packages/BioCor))
+
+## Distributions
+
+A friend asked how my package handles that the pathways databases are incomplete. At the moment it doesn't, it is not a smart package (garbage in, garbage out), so make sure of the input information of which genes go to which pathways.
+
+However this got me into thinking about the distribution of the size of the pathways along the number of a pathway a gene has. Or in some related distribution to try to infer if from the number pathways a gene is involved in we can deduce some expected pathway size or the other way around, if given a size of a pathway we can deduce in how many pathways are the genes. 
+
+## Differences between databases
+
+One point I would like to address using BioCor is how similar are pathway databases, find if the information is redundant or if there is one better database, by looking at the similarity between genes.
+
+### Actual agreeement
+
+It would be also nice to check if different pathways has the same similarity between genes but different pathways annotated, such as that the resulting overlap is complementary. Would that mean that they are not really pathways, or that the function is robust?
+
+## De novo pathway finder
+
+This is a bit crazy idea, but can we find new pathways without further information? The idea is to start with some database as seed and then through random (or not) resampling of genes labeled as a new pathway see if the similarity of the genes converge (or not). 
+
+One could set restriction to the newly created pathways such that they should have certain dissimilarity with all the previous pathways or follow certain distribution from the first point. I think this is kind of alike how the [MetaCyc](https://metacyc.org/) project work, starting from a seed and expand from there.
+
+## Compare similarities
+
+I don't know how the addition of information in pathways affect the similarity between genes. I would like to explore this with a couple or three databases. 
+
+## Information content
+
+I don't know if there is a way to calculate the information content of a pathway or a pathway database. Maybe in relation to the distribution something could be done. 
