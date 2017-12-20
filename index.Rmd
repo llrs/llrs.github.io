@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
 
 # Projects
 
-You can find [here](https://github.com/llrs?tab=repositories) my repositories. Some of them are projects worth mentioning. This projects are part of my daily work while others I enjoy developing at my own time. They are not chronologically ordered or by any special order.
+You can find [here](https://github.com/llrs?tab=repositories) my repositories. Some of them are projects worth mentioning. This projects are part of my daily work while others I enjoy developing at my own time. They are not ordered chronologically or by any special order. The titles are the link to the webpage or respository.
 
 ## [Bioconductor stats](https://llrs.github.com/BiocStats/) 
 
@@ -37,7 +37,7 @@ You can find [here](https://github.com/llrs?tab=repositories) my repositories. S
 
 This project is to compare how well the packages in Bioconductor work, track the raise and fall of package usage and how much does affect having a good support. 
     
-## [WGCNA](https://llrs.github.com/WGCNA/) 
+## [WGCNA](https://github.com/llrs/WGCNA/) 
 
 **Purpose**: Adding examples, tests and using roxygen in the WGCNA package.  
 
@@ -53,7 +53,7 @@ topGO is the only tool I found that takes into account the DAG structure of GO t
 
 **Purpose**: A package to calculate functional similarities thorough pathways.  
 
-I developed this package as part of my master thesis. You can find some how to use it in a [vignette](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/BioCor.html) and the applications in [another one](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/vignette2.html).   
+I developed this package as part of my master thesis. You can find some how to use it in a [vignette](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/BioCor.html) and the applications in [another one](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/vignette2.html). Some other ideas to work with the package can be found [here](https://llrs.github.io/comments.html)
     
 ##  [GOSemSim](https://github.com/llrs/GOSemSim) 
 
