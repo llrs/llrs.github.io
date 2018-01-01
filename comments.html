@@ -224,7 +224,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Comments on BioCor</h1>
 <h4 class="author"><em>llrs</em></h4>
-<h4 class="date"><em>21 diciembre 2017</em></h4>
+<h4 class="date"><em>1 enero 2018</em></h4>
 
 </div>
 
@@ -241,32 +241,39 @@ div.tocify {
 </script>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>This page is about some ideas I would like to explore related to my package <a href="https://github.com/llrs/BioCor">BioCor</a> (<a href="https://bioconductor.org/packages/BioCor">or in Bioconductor</a>)</p>
-<div id="distributions" class="section level2">
-<h2>Distributions</h2>
 <p>A friend asked how my package handles that the pathways databases are incomplete. At the moment it doesn’t, it is not a smart package (garbage in, garbage out), so make sure of the input information of which genes go to which pathways.</p>
 <p>However this got me into thinking about the distribution of the size of the pathways along the number of a pathway a gene has. Or in some related distribution to try to infer if from the number pathways a gene is involved in we can deduce some expected pathway size or the other way around, if given a size of a pathway we can deduce in how many pathways are the genes.</p>
-</div>
+<p>This page is about some ideas I got around this topic, which I would like to explore with my package <a href="https://github.com/llrs/BioCor">BioCor</a> (<a href="https://bioconductor.org/packages/BioCor">or in Bioconductor</a>), or in general to the pathways database problem.</p>
 <div id="differences-between-databases" class="section level2">
 <h2>Differences between databases</h2>
-<p>One point I would like to address using BioCor is how similar are pathway databases, find if the information is redundant or if there is one better database, by looking at the similarity between genes.</p>
-<div id="actual-agreeement" class="section level3">
-<h3>Actual agreeement</h3>
-<p>It would be also nice to check if different pathways has the same similarity between genes but different pathways annotated, such as that the resulting overlap is complementary. Would that mean that they are not really pathways, or that the function is robust?</p>
-</div>
+<p>One point I would like to address using BioCor is how similar are pathway databases. According to <a href="http://pathguide.org/statistics.php">Pathguide</a> there are 166 metabolic pathways. I would like to find if the information is redundant or if there is one better database, by looking at the similarity between genes and the genes annotated in both databases. I recently come up with the idea that the metabolism is like a language and pathways are like sentences. I am considering using the following variables to compare databases:</p>
+<ul>
+<li>Size of pathways: both the range and the information content</li>
+<li>Number of pathway per genes: both the range and the information content</li>
+<li>The number of pathways: One question that would require manual curation is if pathways with similar names have really the same genes involved.</li>
+<li>The number of genes (and the agreement of genes used)</li>
+<li>The n-grams of genes: both the number of each n-gram present and the information content, as well as which is the biggest n-gram present, more than once (otherwise that would be the same as the largest pathway)</li>
+<li>The similarity between pathways (pathSim)</li>
+<li>The similarity annotation for genes between (geneSim): It would be interesting to compare similarities present in BioCor through several databases.</li>
+</ul>
+<p>I am not sure if this would help to “settle” the discussion about pathways and which database use, but at least would help to choose a database for functional enrichment analysis or other related assessments.</p>
 </div>
 <div id="de-novo-pathway-finder" class="section level2">
 <h2>De novo pathway finder</h2>
-<p>This is a bit crazy idea, but can we find new pathways without further information? The idea is to start with some database as seed and then through random (or not) resampling of genes labeled as a new pathway see if the similarity of the genes converge (or not).</p>
+<p>One discussion I end up was if it was possible to find new pathways for genes purely <em>in-silico</em>. This is a bit crazy idea, but can we find new pathways without further information aside from what we already have? The idea is to start with some database as seed and then through random (or not) re-sampling of genes labeled as a new pathway see if the similarity of the genes converge (or not).</p>
 <p>One could set restriction to the newly created pathways such that they should have certain dissimilarity with all the previous pathways or follow certain distribution from the first point. I think this is kind of alike how the <a href="https://metacyc.org/">MetaCyc</a> project work, starting from a seed and expand from there.</p>
+<p>The features of these new pathways could be:</p>
+<ul>
+<li>Pathway length: Is a probability function from the seed</li>
+<li>Pathway similarity to other pathways: must be bigger or equal to the previous existing similarities</li>
+<li>Pathway must have a new gene not previously used (obvious)</li>
+</ul>
+<p>I don’t know how the addition of pathways affect the similarity between genes. I would like to explore this with a couple or three databases.</p>
 </div>
-<div id="compare-similarities" class="section level2">
-<h2>Compare similarities</h2>
-<p>I don’t know how the addition of information in pathways affect the similarity between genes. I would like to explore this with a couple or three databases.</p>
-</div>
-<div id="information-content" class="section level2">
-<h2>Information content</h2>
-<p>I don’t know if there is a way to calculate the information content of a pathway or a pathway database. Maybe in relation to the distribution something could be done.</p>
+<div id="information-available-to-compare-two-pathways" class="section level2">
+<h2>Information available to compare two pathways</h2>
+<p>To compare two pathways we have the following parameters: - The number of pathways of each gene (and the probability that such coincidence happens) - The number of pathways where both genes are present (and the probability that such coincidence happens) - The number of pathways where one gene or the other is present (and the probability that such coincidence happens) - The similarity between their pathways (and the probability that such coincidence happens) - The length of the pathways of each gene (and the probability that such coincidence happens) - The length of the pathways where both genes are present (and the probability that such coincidence happens) - The length of the pathways where one gene or the other is present (and the probability that such coincidence happens)</p>
+<p>Actually BioCor only uses the similarity between the pathways of two genes to calculate how similar they are, which normalize the length of the pathways and the number of pathways for the two genes. This could be complicated/improved using the above variables depending on how much information is carried by each variable.</p>
 </div>
 </div>
 

@@ -1,7 +1,7 @@
 ---
 title: "Comments on BioCor"
 author: "llrs"
-date: "`r BiocStyle::doc_date()`"
+date: "`r date()`"
 output:
   html_document:
     toc: true
@@ -39,7 +39,7 @@ This page is about some ideas I got around this topic, which I would like to exp
 
 ## Differences between databases
 
-One point I would like to address using BioCor is how similar are pathway databases, find if the information is redundant or if there is one better database, by looking at the similarity between genes and the genes annotated in both databases. I recently come up with the idea that the metabolism is like a language and pathways are like sentences. I am considering using the following variables to compare databases:
+One point I would like to address using BioCor is how similar are pathway databases. According to [Pathguide](http://pathguide.org/statistics.php) there are 166 metabolic pathways. I would like to find if the information is redundant or if there is one better database, by looking at the similarity between genes and the genes annotated in both databases. I recently come up with the idea that the metabolism is like a language and pathways are like sentences. I am considering using the following variables to compare databases:
 
 - Size of pathways: both the range and the information content
 - Number of pathway per genes: both the range and the information content
@@ -66,3 +66,14 @@ The features of these new pathways could be:
 I don't know how the addition of pathways affect the similarity between genes. I would like to explore this with a couple or three databases. 
 
 ## Information available to compare two pathways
+
+To compare two pathways we have the following parameters:
+- The number of pathways of each gene (and the probability that such coincidence happens)
+- The number of pathways where both genes are present (and the probability that such coincidence happens)
+- The number of pathways where one gene or the other is present (and the probability that such coincidence happens)
+- The similarity between their pathways (and the probability that such coincidence happens)
+- The length of the pathways of each gene (and the probability that such coincidence happens)
+- The length of the pathways where both genes are present (and the probability that such coincidence happens)
+- The length of the pathways where one gene or the other is present (and the probability that such coincidence happens)
+
+Actually BioCor only uses the similarity between the pathways of two genes to calculate how similar they are, which normalize the length of the pathways and the number of pathways for the two genes. This could be complicated/improved using the above variables depending on how much information is carried by each variable. 
