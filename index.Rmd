@@ -1,7 +1,7 @@
 ---
 title: "Repositories"
 author: "llrs"
-date: "`r BiocStyle::doc_date()`"
+date: "`r date()`"
 output:
   html_document:
     toc: true
@@ -77,4 +77,4 @@ This analysis was part of a subject for my master. The respository with the data
 
 **Purpose**: Remove bugs for the [main repository](https://github.com/Lagkouvardos/Rhea).  
 
-For a collaboration we are using this software, as it is aimed to be user-friendly I introduced some changes that helped my team mates. 
+We are using this software as part of a collaboration, as it is aimed to be user-friendly I introduce  changes to help my team mates to use it. 
