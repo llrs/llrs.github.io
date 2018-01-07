@@ -68,6 +68,7 @@ I don't know how the addition of pathways affect the similarity between genes. I
 ## Information available to compare two pathways
 
 To compare two pathways we have the following parameters:
+
 - The number of pathways of each gene (and the probability that such coincidence happens)
 - The number of pathways where both genes are present (and the probability that such coincidence happens)
 - The number of pathways where one gene or the other is present (and the probability that such coincidence happens)
