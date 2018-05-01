@@ -54,6 +54,12 @@ topGO is the only tool I found that takes into account the DAG structure of GO t
 **Purpose**: A package to calculate functional similarities thorough pathways.  
 
 I developed this package as part of my master thesis. You can find some how to use it in a [vignette](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/BioCor.html) and the applications in [another one](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/vignette2.html). Some other ideas to work with the package can be found [here](https://llrs.github.io/comments.html)
+
+##  [GSEAdv](https://github.com/llrs/GSEAdv) 
+
+**Purpose**: A package to analyse gene set collections.
+
+It comes from the previous [comments](https://llrs.github.io/comments.html), and holds lots of code to analyze, simulate and compare different gene set collections, see also the [blog post](http://b101nfo.blogspot.com/2018/03/functional-enrichment-methods-and.html) about the history of the package. Using this software to comapre pathways databases will probably require another article.
     
 ##  [GOSemSim](https://github.com/llrs/GOSemSim) 
 
@@ -78,3 +84,9 @@ This analysis was part of a subject for my master. The respository with the data
 **Purpose**: Remove bugs for the [main repository](https://github.com/Lagkouvardos/Rhea).  
 
 We are using this software as part of a collaboration, as it is aimed to be user-friendly I introduce  changes to help my team mates to use it. 
+
+## [Thesis](https://llrs.github.com/thesis/) 
+
+**Purpose**: Write my thesis along the way, instead of waiting for the last final months.
+
+I don't know the license of the thesis as I don't know how and where it will end up, but I welcome any comments and feedbacks. 
