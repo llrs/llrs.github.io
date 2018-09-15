@@ -89,4 +89,10 @@ We are using this software as part of a collaboration, as it is aimed to be user
 
 **Purpose**: Write my thesis along the way, instead of waiting for the last final months.
 
-I don't know the license of the thesis as I don't know how and where it will end up, but I welcome any comments and feedbacks. 
+My thesis is about the integration of data, how the microbiome is related to the transcriptome in the inflammatory bowel disease.
+
+## [experDesign](https://github.com/llrs/experDesign)
+
+**Purpose**: A package for preparing the samples to be sequenced in batches
+
+Divides the samples in equal batches, provides methods to select randomly but equilibrated samples. The name is from  expert design and experiment design.
