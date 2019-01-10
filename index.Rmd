@@ -96,3 +96,10 @@ My thesis is about the integration of data, how the microbiome is related to the
 **Purpose**: A package for preparing the samples to be sequenced in batches
 
 Divides the samples in equal batches, provides methods to select randomly but equilibrated samples. The name is from  expert design and experiment design.
+
+## [RGCCA](https://github.com/llrs/RGCCA)
+
+**Purpose**: Understand better the methods implemented and improve the efficiency.
+
+A fork from CRAN was used to implement tests to the package, speed the functions and add some checks of the input parameters (Using this fork has already saved my some time).
+I also added a function to check an input parameter.
