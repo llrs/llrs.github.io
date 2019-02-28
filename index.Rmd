@@ -47,7 +47,7 @@ This project is to compare how well the packages in Bioconductor work, track the
 
 **Purpose**: Correcting some errors in the topGO package of Bioconductor.  
 
-topGO is the only tool I found that takes into account the DAG structure of GO to calculate the enrichment scores. However is not longer developed nor maintained since Oct 10, 2011, althoguh the maintainer updated the mail in 2014. I try to update and understand how it is implemented to correct bugs. 
+topGO is the only tool I found that takes into account the DAG structure of GO to calculate the enrichment scores. A fork of a prvious verion were I tryed to update and understand how it is implemented to correct bugs. The author's github page of the package is [here](https://github.com/adrianalexa/topGO). 
     
 ##  [BioCor](https://bioconductor.org/packages/BioCor) 
 
@@ -55,11 +55,29 @@ topGO is the only tool I found that takes into account the DAG structure of GO t
 
 I developed this package as part of my master thesis. You can find some how to use it in a [vignette](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/BioCor.html) and the applications in [another one](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/vignette2.html). Some other ideas to work with the package can be found [here](https://llrs.github.io/comments.html)
 
+
+## [experDesign](https://github.com/llrs/experDesign)
+
+**Purpose**: A package for preparing the samples to be sequenced in batches
+
+Divides the samples in equal batches, provides methods to select randomly but equilibrated samples. The name is from  expert design and experiment design. 
+It started as a way to randomize some samples to be sequenced in the lab.
+It randomize the samples considering whatever variables that could affect the 
+batch effect and that have been stored before sequencing. 
+
 ##  [GSEAdv](https://github.com/llrs/GSEAdv) 
 
 **Purpose**: A package to analyse gene set collections.
 
 It comes from the previous [comments](https://llrs.github.io/comments.html), and holds lots of code to analyze, simulate and compare different gene set collections, see also the [blog post](http://b101nfo.blogspot.com/2018/03/functional-enrichment-methods-and.html) about the history of the package. Using this software to comapre pathways databases will probably require another article.
+
+##  [BaseSet](https://github.com/llrs/BaseSet) 
+
+**Purpose**: A package to store set collections.
+
+After finding some limitations on the GSEAdv project I started this project to test how sets could be stored efficiently. Later I found that a new system for holding gene sets was being considered. My idea is to end up merging GSEAdv methods into BaseSet. In this project I am using NSE (or tidy evaluations for the first time).
+Some discussion and consideration about the new gene set class is beind written
+[here](https://docs.google.com/document/d/1A3bs1rtbTo42Sgm9hPbLoG1lTGbQ-ITENaLRVyK2Njo/edit#)
     
 ##  [GOSemSim](https://github.com/llrs/GOSemSim) 
 
@@ -77,7 +95,9 @@ This was a project (for a subject in the master) to learn how to use databases a
 
 **Purpose**: Find why women have more thyroid carcinoma.
 
-This analysis was part of a subject for my master. The respository with the data and output is [here](https://github.com/llrs/IEO).  
+This analysis was part of a subject for my master. 
+We (it is a team work) explored several methods of batch correction and contrast. 
+The respository with the data and output is [here](https://github.com/llrs/IEO).  
     
 ## [Rhea](https://github.com/llrs/Rhea) 
 
@@ -91,8 +111,3 @@ We are using this software as part of a collaboration, as it is aimed to be user
 
 My thesis is about the integration of data, how the microbiome is related to the transcriptome in the inflammatory bowel disease.
 
-## [experDesign](https://github.com/llrs/experDesign)
-
-**Purpose**: A package for preparing the samples to be sequenced in batches
-
-Divides the samples in equal batches, provides methods to select randomly but equilibrated samples. The name is from  expert design and experiment design.
