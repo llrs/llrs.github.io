@@ -13,9 +13,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Exploring the I+D+i in Spain
 
-There is lot of discussion, here I will analyze some data:
+Recently my group got awarded with a grant. [Here](https://twitter.com/AgEInves/status/1121693189897723909) is an 
+announcement to the social media:
 
-From the documen the more important ones are the 
+ > 1.855 proyectos han sido seleccionados de un total de 4.308 presentados. 
+ > 
+ > La inversión asciende a 252,2 millones de euros.
+ 
+There is lot of discussion about the amount and percentage Spain should invest in research and development. Here I will analyze the document of this grant:
+
+From the document the more important thing are the tables at the annex, from the document linked at the tweet above:
 
 > Anexo I: Relación de proyectos de investigación con propuesta de financiación
 > Anexo II: Propuesta de financiación de cada proyecto
@@ -23,23 +30,12 @@ From the documen the more important ones are the
 > Anexo IV: Relación de proyectos a los que no se propone financiación
 > Anexo V: ITI CÁDIZ
 
-
-For reference here are some numbers
-https://twitter.com/AgEInves/status/1121693189897723990
-
-But some think that they are wrong:
-
-https://twitter.com/BenLehner/status/1121812355019616256
-
-So I went to the original data to see what happens
-
-Those projects with and without money.
+Really we are interested on annex 1, 2, and 4. (I won't analyse the specific ITI for Cádiz)
 
 
 ## Original data
 
-The data mentioned in the tweet is [this one](https://sede.micinn.gob.es/stfls/eSede/Ficheros/2019/Propuesta_Resolucion_Provisional_Proyectos_Generacion_Conocimiento_2018_fda.pdf), however, my PI recieved the email with a link to another [pdf](http://www.ciencia.gob.es/stfls/eSede/Ficheros/2019/PRP_Retos_Investigacion_2018.pdf). I'll use the later
-We need to extract the tables to be able to analyze the content.
+The raw data is a [pdf](http://www.ciencia.gob.es/stfls/eSede/Ficheros/2019/PRP_Retos_Investigacion_2018.pdf), so we need to extract the tables to be able to analyze the content.
 
 ## Obtaining the data
 
@@ -50,150 +46,194 @@ library("pdftools")
 pdf <- "http://www.ciencia.gob.es/stfls/eSede/Ficheros/2019/PRP_Retos_Investigacion_2018.pdf"
 text <- pdf_text(pdf)
 document <- sapply(text, function(page) {
-  lines <- strsplit(page, "\\n\\s+")
+  lines <- strsplit(page, "\\n")
   lapply(lines, trimws)
 }, USE.NAMES = FALSE)
 ```
 
-By manually inspecting the file we find that the relevant "anexos" are in these pages:
+By manually inspecting the file we find that the relevant annexes are in these pages:
 ```{r positions}
-anex1 <- 4:118
-anex2 <- 119:182
-anex4 <- 190:309
-interesting <- list(anex1, anex2, anex4)
-names(interesting) <- c("anex1", "anex2", "anex4")
+annex1 <- 4:118
+annex2 <- 119:182
+annex4 <- 190:309
+annex5 <- 310:312
+interesting <- list(annex1, annex2, annex4, annex5)
+names(interesting) <- c("annex1", "annex2", "annex4", "annex5")
 ```
-I restrict to those in table format and for the whole country.
 
-Now we need to convert them to tables, by first removing the header and the notes at the end of the tables.
+Next step is to clean the data to convert them to tables. We start by first removing the header and the notes at the end of the tables (They include the signature and the name of the file/grant):
 ```{r trimming}
-trim_page <- function(x) {
-  header <- c(1:3)
-  notes <- seq(from = length(x) -1 , to = length(x)) 
-  x[-c(header, notes)]
-}
-
-anexes <- lapply(interesting, function(x, document) {
-  lapply(document[x], trim_page)
+annexes <- lapply(interesting, function(x, document) {
+  document[x]
 }, document = document)
 
 ```
-Now we want to split by field and we use this opportunity to correct some common mishandle of names of the research center.
-
-We see that often the long names of the 5th field are in the previous line. However it is not correelcty parsed "AGENCIA ESTATAL CONSEJO SUPERIOR DE" is for the 4th field usually and the rest for the 5th.
-
+Now we want to split by field (that is if there is more than two spaces we consider it a field).
+We first needed to analyze those that didn't split in the expected number of fields:
 ```{r split_fields}
-anexes_field <- lapply(anexes, function(x){
-  lapply(x, function(pages) {
-    y <- strsplit(pages, "\\s{2, }")
-    zy <- y
-    zy <- unlist(zy)
-    y[lengths(y) == 1] <- sapply(y[lengths(y) == 1], function(x){
-      # browser()
-     if (grepl("AGENCIA ESTATAL CONSEJO SUPERIOR DE", x)) {
-       z <- gsub("AGENCIA ESTATAL CONSEJO SUPERIOR DE ", "", x)
-       c(z, "AGENCIA ESTATAL CONSEJO SUPERIOR DE")
-     } else {
-       x
-     }
-    })
-    y
+clean_entry <- function(x) {
+  y <- gsub("(UNIVERSITAT POLITECNICA DE CATALUNYA)", 
+            " \\1 ", x)
+  y <- gsub("(INVESTIGACIONES CIENTIFICAS \\(CSIC\\) )", 
+            " CONSEJO SUPERIOR DE \\1  ", y)
+  y <- gsub("ENERGIGUNE ENERGIGUNE", 
+            "ENERGIGUNE  ENERGIGUNE", y)
+  y <- gsub("(CIEMAT - MONCLOA)", " \\1", y)
+  y <- gsub("(CIEMAT\\))", "\\1 ", y)
+  y <- gsub("( DE VIC )", "\\1 ", y)
+  y <- gsub("( DE COMPOSTELA )", "\\1 ", y)
+  y <- gsub("( PABLO CEU )", "\\1 ", y)
+  y <- gsub("( UNIVERSITAT POMPEU FABRA )", "\\1 ", y)
+  y <- gsub("(CCT\\s+)", "CCT ", y)
+  y <- gsub("(APLICACIONES FORESTALES CCT)", "\\1 ", y)
+  y <- gsub("( \\(INTA\\))", "\\1 ", y)
+  y <- gsub("( \\(INIA\\))", "\\1 ", y)
+  y <- gsub("(JOSE MARIA ARIZMENDIARRIETA S. COOP.)", "\\1 ", y)
+  y <- gsub("(UNIVERSIDAD AUTONOMA DE BARCELONA)", "\\1 ", y)
+  y <- gsub("(UNIVERSIDAD DE MADRID)", "\\1 ", y)
+  y <- gsub("(UNIVERSIDAD CARLOS III DE MADRID)", "\\1 ", y)
+  y <- gsub("(UNIVERSIDAD COMPLUTENSE DE MADRID)", "\\1 ", y)
+  y <- gsub("(UNIVERSIDAD POLITECNICA DE MADRID)", "\\1 ", y)
+  y <- gsub("( DE VALÈNCIA )", "\\1 ", y)
+  y <- gsub("(UNIVERSIDAD DE CASTILLA-LA MANCHA)", "\\1 ", y)
+  y <- gsub("(DE LA IGLESIA DE DEUSTO)", "\\1 ", y)
+  y <- gsub("(ISLAS BALEARES )", "\\1 ", y)
+  y <- gsub("(POLITÉCNICA DE CARTAGENA )", "\\1 ", y)
+  y <- gsub("\\s([A-Z][0-9]+[A-Z]?)\\s", "  \\1  ",  y, perl = TRUE)
+  
+  #  Numbers
+  y <- gsub("1.246.300,00 1.030.000,00\\s", "1.246.300,00  1.030.000,00",  y)
+  y <- gsub("2.178.000,00 1.800.000,00\\s", "2.178.000,00  1.800.000,00",  y)
+  y <- gsub("1.573.000,00 1.300.000,00\\s", "1.573.000,00  1.300.000,00",  y)
+  y <- gsub("2.372.205,00 1.960.500,00\\s", "2.372.205,00  1.960.500,00",  y)
+  
+  #
+  y <- gsub("(TARRASENSE - LEITAT )", "\\1 ",  y)
+  y <- gsub("CENTRO DE INVESTIGACIONES CIENTÍFICAS CENTRO DE INVESTIGACIONES CIENTÍFICAS", 
+            "CENTRO DE INVESTIGACIONES CIENTÍFICAS  CENTRO DE INVESTIGACIONES CIENTÍFICAS",  y)
+  y <- gsub("(CENTRO INVESTIGACION BIOMEDICA EN RED )", "\\1 ",  y)
+  y <- gsub("(FUNDACION CENTRO DE CIRUGIA DE MINIMA )", "\\1 ",  y)
+  y <- gsub("(INSTITUTO NACIONAL DE INVESTIGACIÓN Y )", "\\1 ",  y)
+  
+  #
+  y <- gsub("( AGENCIA ESTATAL CONSEJO)", " \\1",  y)
+  y <- gsub("(FUNDACION PARA LA GESTION DE HOSPITAL PUERTA DEL)", "\\1  \\1",  y)
+  y <- gsub("(METODOS AVANZADOS DE)", "\\1 ",  y)
+  y <- gsub("( UNIVERSIDAD DE CADIZ)", " \\1 ",  y)
+  
+  # split
+  y <- strsplit(y, "\\s{2, }")
+  y <- unlist(y)
+  y
+}
+
+annexes_field <- sapply(annexes, function(x) {
+  sapply(x, function(pages) {
+    # keep those lines that start with the name of an application
+    entries <- grepl("^RTI", pages)
+    if (any(entries)) {
+      lapply(pages[entries], clean_entry)
+    }
   })
 })
+
 ```
 
-# Anex 1
+We write some function to help us tidy the data, the first one to convert it into a data.frame
+The second one to convert a factor which is really a number into a number:
 
-```{r}
-for (anex in names(anexes_field)) {
-  for (page in anexes_field[[anex]]) {
-    fields_page <- lengths(page)
-    size_table <- switch(anex, 
-                         "anex1" = 9, 
-                         "anex2" = 6,
-                         "anex4" = 7)
-    entries <- which(fields_page == size_table)
-    n_lines <- length(fields_page)
-    for (line in seq_len(n_lines)) {
-      if ((fields_page == size_table)[line]) {
-        previous_entry <- which.max(entries[-seq(from = 1, to = line-1)])
-        interval <- seq(from = previous_entry, to = line -1)
-        field4 <- paste(sapply(page[interval], "[", 1))
-        field5 <- paste(sapply(page[interval], "[", -1))
-        page[[line]][4] <- paste(field4, page[[line]][4])
-        page[[line]][5] <- paste(field4, page[[line]][5])
-      }
-    }
-    anexes_field[[anex]] <- page
-  }
+```{r functions}
+doc2df <- function(documents, colnames) {
+  anext <- sapply(documents, function(page, ncol) {
+     # Filter by the number of 
+    y <- page[lengths(page) == ncol]
+    
+    if (length(y) > 1) {
+      t(simplify2array(y))
+    }}, ncol = length(colnames))
+  # Convert to a data.frame
+  anext <- as.data.frame(do.call(rbind, anext))
+  # Set the colnames
+  colnames(anext) <- colnames
+  anext
 }
 
-anext <- sapply(anexes_field[[1]], function(page){
-  page[lengths(page) == 9]
-})
-anext2 <- lapply(anext[lengths(anext) > 1], function(page){
-  t(simplify2array(page))
-})
-t2 <- do.call(rbind, anext2)
-t2 <- as.data.frame(t2)
-colnames(t2) <- c("reference", "area", "subarea", "entity", "center", "NIF", 
-                  "CA", "years", "predoc")
-fact2_number <- function(f){
+fact2number <- function(f){
    as.numeric(levels(f))[f]
 }
-t2$predoc <- fact2_number(t2$predoc)
-t2$years <- fact2_number(t2$years)
 ```
 
-```{r relevel}
+# Annex 1 : Succesful applications:
+
+We can use this functions on the first annex:
+```{r clean_annex1}
 library("forcats")
-t2$CA <- fct_relabel(t2$CA,  ~ gsub("^A$", "EXTREMADURA", .))
-t2$CA <- fct_relabel(t2$CA,  ~ gsub("^S$", "PDO.ASTURIAS", .))
-t2$CA <- fct_relevel(t2$CA, sort)
+annex1 <- doc2df(annexes_field[[1]], 
+                 c("reference", "area", "subarea", "entity", "center", "NIF", 
+                   "CA", "years", "predoc"))
+
+annex1$predoc <- fact2number(annex1$predoc)
+annex1$years <- fact2number(annex1$years)
+annex1$CA <- fct_relabel(annex1$CA,  ~ gsub("^A$", "EXTREMADURA", .))
+annex1$CA <- fct_relabel(annex1$CA,  ~ gsub("^S$", "PDO.ASTURIAS", .))
+annex1$CA <- fct_relabel(annex1$CA,  ~ gsub("^MANCHA$", "CASTILLA-LA MANCHA", .))
+annex1$CA <- fct_relabel(annex1$CA,  ~ gsub("^LEON$", "CASTILLA Y LEON", .))
+annex1$CA <- fct_relevel(annex1$CA, sort)
 ```
 
+We can see some interesting summary here:
 
-```{r}
-table(t2$years, t2$predoc)
-table(t2$NIF)
-table(t2$CA)
-table(t2$area, t2$subarea)
-tt <- table(t2$entity, t2$center)
+```{r tables_annex1}
+# Is there a relationship between duration of the project and possibility to employ someone?
+table(annex1$years, annex1$predoc)
+# Which NIF recieves more grants?
+tail(sort(table(annex1$NIF)))
+# Which CA recieves more grants?
+sort(table(annex1$CA), decreasing = TRUE)
 ```
+
+With the clean data and in a data.frame we can plot it to gain more insight:
 
 ```{r plots}
 library("ggplot2")
-  geom_count(aes(NIF, CA))
-ggplot(t2) +
-  geom_count(aes(entity, center))
-ggplot(t2) +
+theme_set(theme_bw())
+remove_x_text <- theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(), 
+        panel.grid.major.x = element_blank())
+remove_y_text <- theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(), 
+        panel.grid.major.y = element_blank())
+ggplot(annex1) +
+  geom_count(aes(NIF, CA)) +
+  remove_x_text
+ggplot(annex1) +
+  geom_count(aes(entity, center)) +
+  remove_x_text +
+  remove_y_text
+ggplot(annex1) +
   geom_bar(aes(entity, fill = area)) +
   facet_wrap(~CA) +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
-table(t2$CA)
+  remove_x_text
+
 library("dplyr")
-t2 %>% 
+annex1 %>% 
   group_by(NIF, center) %>% 
   summarise(people = sum(predoc)) %>% 
   filter(people != 0) %>% 
   arrange(desc(people))
-t2 %>% ggplot()+ 
+annex1 %>% ggplot()+ 
   geom_bar(aes(CA, fill = area)) + 
   scale_fill_viridis_d() +
-  theme_bw() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   labs(title = "Retos investigación 2018", x = "Comunidades autónomas", 
        y = "Proyectos")
-t2 %>% 
+annex1 %>% 
   group_by(center, NIF) %>% 
-  count() %>% 
+  summarise(n = n(), Site = unique(paste(center, NIF)), CA = unique(CA)) %>% 
   arrange(desc(n)) %>% 
-  mutate(Site = paste(center, NIF)) %>% 
   head(n = 25) %>% 
   ggplot() + 
-  geom_col(aes(fct_reorder(Site, order(n, decreasing = TRUE)), n))  +
-  theme_bw() + 
+  geom_col(aes(fct_reorder(Site, order(n, decreasing = TRUE)), n, fill = CA))  +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.ticks.x = element_blank(),
         axis.line.x = element_blank()) +
@@ -202,147 +242,190 @@ t2 %>%
 
 ```
 
-## Economic
-```{r}
-anex2 <- anexes_field[[2]]
-anex2t <- sapply(anex2, function(page){
-  page[lengths(page) == 12]
-})
-anex2t2 <- lapply(anex2t[lengths(anex2t) > 1], function(page){
-  t(simplify2array(page))
-})
-t2b <- do.call(rbind, anex2t2)
-colnames(t2b) <- c("reference", "total", "direct", "indirect", "reimbursable", "grant", 
+# Annex2: Economic data 
+
+The money assigned to the approved projects is in the annex 2. We prepare the data:
+
+```{r clean_annex2}
+annex2 <- doc2df(annexes_field[[2]], c("reference", "total", "direct", "indirect", "reimbursable", "grant", 
                   "grant_2019", "reimbursable_2019", "total_2019",
-                  "grant_2020", "grant_2021", "grant_2022")
-t2b <- apply(t2b, 2, function(x){
+                  "grant_2020", "grant_2021", "grant_2022"))
+# Convert text to numbers for R
+annex2 <- sapply(annex2, function(x) {
   y <- gsub("\\.", "", x)
   gsub(",", ".", y)
 })
-t2b <- as.data.frame(t2b)
-t2b[, 2:12] <- sapply(t2b[, 2:12], fact2_number)
+annex2 <- as.data.frame(annex2)
+annex2[, 2:12] <- sapply(annex2[, 2:12], fact2number)
 ```
+
+Then we can explore the projects:
 ```{r}
 library("ggforce")
+library("scales")
 # With help from: https://stackoverflow.com/a/32265122/2886003
 euro_format <- dollar_format(suffix = "€", prefix = "")
-ggplot(t2b) +
+ggplot(annex2) +
   geom_histogram(aes(total), bins = 100) +
-  theme_bw() +
   scale_x_continuous(labels = euro_format) +
   facet_zoom(xlim = c(0, 400000)) +
   labs(y = "Projects", x = "Amount per project", title = "Money per project")
-
-ggplot(t2b) +
-  geom_point(aes(total, direct))
-ggplot(t2b) +
-  geom_point(aes(total, indirect))
-ggplot(t2b) +
-  geom_point(aes(grant, reimbursable)) +
-  scale_x_continuous(labels = euro_format) +
-  scale_y_continuous(labels = euro_format) +
-  labs(x = "Subvención", y = "Reembolsable", title = "Relación financiera de los proyectos") + 
-  theme_bw()
 ```
 
+We can see that most project are around `r euro_format(median(annex2$total))`. 
+The ratio of direct cost to indirect cost is `r round(annex2$direct[1]/annex2$indirect[1], 2)`, which means that the indirect cost must be at most `r round(1/annex2$direct[1]/annex2$indirect[1]*100, 2)`% of the grant.
 
 ```{r}
-df <- merge(t2b, t2)
+df <- merge(annex1, annex2)
+
 ggplot(df) +
-  geom_point(aes(grant, reimbursable, col = as.factor(years), 
-                 size = as.factor(years))) +
+  geom_point(aes(grant, reimbursable, col = as.factor(years)), size = 3) +
   scale_x_continuous(labels = euro_format) +
   scale_y_continuous(labels = euro_format) +
-  labs(x = "Subvención", y = "Reembolsable", 
-       title = "Relación financiera de los proyectos",
-       col = "Años", size = "Años") + 
-  theme_bw()
+  labs(x = "Grant", y = "Reimbursable", 
+       title = "Finantial projects",
+       col = "Years")
 
 df %>% 
   group_by(CA) %>% 
   summarise(total_CA =  sum(total), n = n(), mean = total_CA/n, sd = sd(total)) %>% 
   ggplot() + 
+  scale_x_continuous(labels = euro_format) +
   geom_point(aes(total_CA, n, col = CA), size = 6) +
-  theme_bw() +
-  scale_x_continuous(labels = ) +
   labs(x = "Total €", y = "Projects", title = "Projects", col = "Comunidad autómoma")
 
 df %>% 
   ggplot() +
   geom_violin(aes(CA, total, col = CA)) +
-  geom_jitter(aes(CA, total, col = CA)) +
-  theme_bw() +
+  geom_jitter(aes(CA, total, col = CA), alpha = 0.35) +
   scale_y_continuous(labels = euro_format) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(y = "Euros per project", title = "Projects and CA", 
        x = "Comunidad Autónoma")
 
-df %>% 
-  group_by(CA, area) %>% 
-  count() %>% 
-  ggplot() +
-  geom_point(aes(CA, area, size = n)) +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.ontop = element_blank()) +
-  labs(y = "Projects", title = "Projects and CA", 
-       x = "Comunidad Autónoma")
 
+df %>% 
+  mutate(person = if_else(predoc == 1, "Yes", "No")) %>% 
+  filter(total != 0) %>% 
+  ggplot() +
+  geom_violin(aes(person, total)) +
+  geom_jitter(aes(person, total), alpha = 0.35) +
+  scale_y_continuous(labels = euro_format)
+  
 ```
 
+We can see that projets that employ someone are provided with more money. 
 
-## Rechazados
+## Annex IV Unsuccesful applications
+
+So far we looked at the succesful grants, we also have information about the ones that are not succesful.
 
 ```{r}
-anex4 <- anexes_field[[3]]
-anex4t <- sapply(anex4, function(page){
-  page[lengths(page) == 7]
-})
-anex4t2 <- lapply(anex4t[lengths(anex4t) > 1], function(page){
-  t(simplify2array(page))
-})
-t4b <- do.call(rbind, anex4t2)
-colnames(t4b) <- c("reference", "area", "subarea", "entity", "center", "NIF", "CA")
-t4b <- as.data.frame(t4b)
-t4b$CA <- fct_relevel(t4b$CA, sort)
-t4b %>% 
+annex4 <- doc2df(annexes_field[[3]], 
+                 c("reference", "area", "subarea", "entity", "center", "NIF", "CA"))
+
+annex4$CA <- fct_relevel(annex4$CA, sort)
+annex4 %>% 
   group_by(CA) %>% 
   count() %>% 
   ggplot() +
   geom_col(aes(CA, n)) +
-  theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+We can see that `r paste(annex4 %>%  group_by(CA) %>% tally() %>% top_n(n = 3) %>% pull(CA), collapse = ", ")` are the ones with less succesful applications.
+
 ## All
 
+Merging both data.frames we can explore the success rates, but first we need to clean them a bit:
+
 ```{r}
-df2 <- merge(df, t4b, all = TRUE)
-df2$CA <- fct_relevel(df2$CA, sort)
-df2$NIF <- fct_relevel(df2$NIF, sort)
+df <- merge(df, annex4, all = TRUE)
+
+levels(df$CA) <- gsub("^MANCHA$", "CASTILLA-LA MANCHA", levels(df$CA))
+df$CA <- fct_relevel(df$CA, sort)
+df$NIF <- fct_relevel(df$NIF, sort)
 numeric_colnames <- colnames(df)
 numeric_colnames <- numeric_colnames[-c(1, 13:18)]
-df2[, numeric_colnames][is.na(df2[, numeric_colnames])] <- 0
+df[, numeric_colnames][is.na(df[, numeric_colnames])] <- 0
 ```
 
-
+Now we can explore the success application rate. The global success rate is `r df %>%   summarise(rate = sum(total != 0)/n()) %>%  pull(rate)`
 ```{r}
-df2 %>% 
+# By Nif
+global <- df %>% 
   group_by(NIF) %>% 
-  summarise(n = n(), granted = sum(total != 0), percent = granted/n*100) %>% 
+  summarise(rate = sum(total != 0)/n()) %>% 
+  ungroup() %>% 
+  summarise(mean = mean(rate), sd = sd(rate))
+df %>% 
+  group_by(NIF) %>% 
+  summarise(n = n(), granted = sum(total != 0), percent = granted/n) %>% 
   arrange(desc(percent), desc(n)) %>% 
   ggplot() +
-  geom_point(aes(n, granted, col = percent)) +
-  geom_abline(aes(intercept = 0, slope = 1)) +
-  theme_bw()
+  geom_col(aes(NIF, percent)) +
+  geom_hline(yintercept = c(global$mean, 
+                            global$mean - global$sd, 
+                            global$mean + global$sd), 
+             col = c("black", "red", "green")) +
+  scale_y_continuous(labels = scales::percent) +
+  remove_x_text
 
-df2 %>% 
+global <- df %>% 
   group_by(area) %>% 
-  summarise(n = n(), granted = sum(total != 0), percent = granted/n*100) %>% 
+  summarise(rate = sum(total != 0)/n()) %>% 
+  ungroup() %>% 
+  summarise(mean = mean(rate), sd = sd(rate))
+df %>% 
+  group_by(area) %>% 
+  summarise(n = n(), granted = sum(total != 0), percent = granted/n) %>% 
   arrange(desc(percent), desc(n)) %>% 
   ggplot() +
-  geom_point(aes(n, granted, col = percent)) +
-  geom_abline(aes(intercept = 0, slope = 1)) +
-  theme_bw()
+  geom_col(aes(area, percent)) +
+  geom_hline(yintercept = c(global$mean, 
+                            global$mean - global$sd, 
+                            global$mean + global$sd), 
+             col = c("black", "red", "green")) +
+  scale_y_continuous(labels = scales::percent)
+global <- df %>% 
+  group_by(CA) %>% 
+  summarise(rate = sum(total != 0)/n()) %>% 
+  ungroup() %>% 
+  summarise(mean = mean(rate), sd = sd(rate))
+df %>% 
+  group_by(CA) %>% 
+  summarise(n = n(), granted = sum(total != 0), percent = granted/n) %>% 
+  arrange(desc(percent), desc(n)) %>% 
+  ggplot() +
+  geom_col(aes(CA, percent, fill = CA)) +
+  geom_hline(yintercept = c(global$mean, 
+                            global$mean - global$sd, 
+                            global$mean + global$sd), 
+             col = c("black", "red", "green")) +
+  scale_y_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+df %>% 
+  group_by(CA, area) %>% 
+  summarise(n = n(), ratio = sum(total != 0)/n) %>% 
+  ggplot() +
+  geom_point(aes(CA, area, size = n, col = ratio)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.ontop = element_blank()) +
+  labs(y = "Applications", title = "Applications ratio by area and CA", 
+       x = "Comunidad Autónoma", col = "Ratio applications", 
+       size = "Applications") +
+  scale_color_viridis_c(option = "A", direction = -1)
+```
+
+We can see that some few caomunidades autonomas have grants from all areas.
+
+# Bonus
+
+For completeness we look at the last annex.
+
+```{r clean_annex5}
+annex5 <- doc2df(annexes_field[[4]], c("reference", "area", "subarea", "title", "entity", "center", "NIF", "CA"))
 ```
 
