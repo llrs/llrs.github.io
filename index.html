@@ -1326,9 +1326,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -1359,8 +1357,6 @@ summary {
 </style>
 
 
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -1525,6 +1521,16 @@ div.tocify {
 
 </style>
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
 <div class="col-xs-12 col-sm-4 col-md-3">
@@ -1542,8 +1548,8 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Repositories</h1>
-<h4 class="author"><em>llrs</em></h4>
-<h4 class="date"><em>Thu Feb 28 23:11:39 2019</em></h4>
+<h4 class="author">llrs</h4>
+<h4 class="date">Sun May 5 12:34:31 2019</h4>
 
 </div>
 
@@ -1581,11 +1587,6 @@ div.tocify {
 <p><strong>Purpose</strong>: A package to calculate functional similarities thorough pathways.</p>
 <p>I developed this package as part of my master thesis. You can find some how to use it in a <a href="http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/BioCor.html">vignette</a> and the applications in <a href="http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/vignette2.html">another one</a>. Some other ideas to work with the package can be found <a href="https://llrs.github.io/comments.html">here</a></p>
 </div>
-<div id="experdesign" class="section level2">
-<h2><a href="https://github.com/llrs/experDesign">experDesign</a></h2>
-<p><strong>Purpose</strong>: A package for preparing the samples to be sequenced in batches</p>
-<p>Divides the samples in equal batches, provides methods to select randomly but equilibrated samples. The name is from expert design and experiment design. It started as a way to randomize some samples to be sequenced in the lab. It randomize the samples considering whatever variables that could affect the batch effect and that have been stored before sequencing.</p>
-</div>
 <div id="gseadv" class="section level2">
 <h2><a href="https://github.com/llrs/GSEAdv">GSEAdv</a></h2>
 <p><strong>Purpose</strong>: A package to analyse gene set collections.</p>
@@ -1597,7 +1598,7 @@ div.tocify {
 <p>After finding some limitations on the GSEAdv project I started this project to test how sets could be stored efficiently. Later I found that a new system for holding gene sets was being considered. My idea is to end up merging GSEAdv methods into BaseSet. In this project I am using NSE (or tidy evaluations for the first time). Some discussion and consideration about the new gene set class is beind written <a href="https://docs.google.com/document/d/1A3bs1rtbTo42Sgm9hPbLoG1lTGbQ-ITENaLRVyK2Njo/edit#">here</a></p>
 </div>
 <div id="gosemsim" class="section level2">
-<h2><a href="https://github.com/llrs/GOSemSim">GOSemSim</a></h2>
+<h2><a href="https://github.com/GuangchuangYu/GOSemSim">GOSemSim</a></h2>
 <p><strong>Purpose</strong>: Calculate similarities between genes using <a href="http://www.geneontology.org/">gene ontologies</a></p>
 <p>I contributed by speeding calculations in several functions, improving the implementation of the algorithms. I am officially a contributor of the <a href="https://github.com/GuangchuangYu/GOSemSim">official repository</a>.</p>
 </div>
@@ -1620,6 +1621,16 @@ div.tocify {
 <h2><a href="https://llrs.github.com/thesis/">Thesis</a></h2>
 <p><strong>Purpose</strong>: Write my thesis along the way, instead of waiting for the last final months.</p>
 <p>My thesis is about the integration of data, how the microbiome is related to the transcriptome in the inflammatory bowel disease.</p>
+</div>
+<div id="experdesign" class="section level2">
+<h2><a href="https://github.com/llrs/experDesign">experDesign</a></h2>
+<p><strong>Purpose</strong>: A package for preparing the samples to be sequenced in batches</p>
+<p>Divides the samples in equal batches, provides methods to select randomly but equilibrated samples. The name is from expert design and experiment design.</p>
+</div>
+<div id="rgcca" class="section level2">
+<h2><a href="https://github.com/llrs/RGCCA">RGCCA</a></h2>
+<p><strong>Purpose</strong>: Understand better the methods implemented and improve the efficiency.</p>
+<p>A fork from CRAN was used to implement tests to the package, speed the functions and add some checks of the input parameters (Using this fork has already saved my some time). I also added a function to check an input parameter.</p>
 </div>
 </div>
 

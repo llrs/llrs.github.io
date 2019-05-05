@@ -56,15 +56,6 @@ topGO is the only tool I found that takes into account the DAG structure of GO t
 I developed this package as part of my master thesis. You can find some how to use it in a [vignette](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/BioCor.html) and the applications in [another one](http://bioconductor.org/packages/release/bioc/vignettes/BioCor/inst/doc/vignette2.html). Some other ideas to work with the package can be found [here](https://llrs.github.io/comments.html)
 
 
-## [experDesign](https://github.com/llrs/experDesign)
-
-**Purpose**: A package for preparing the samples to be sequenced in batches
-
-Divides the samples in equal batches, provides methods to select randomly but equilibrated samples. The name is from  expert design and experiment design. 
-It started as a way to randomize some samples to be sequenced in the lab.
-It randomize the samples considering whatever variables that could affect the 
-batch effect and that have been stored before sequencing. 
-
 ##  [GSEAdv](https://github.com/llrs/GSEAdv) 
 
 **Purpose**: A package to analyse gene set collections.
@@ -79,7 +70,7 @@ After finding some limitations on the GSEAdv project I started this project to t
 Some discussion and consideration about the new gene set class is beind written
 [here](https://docs.google.com/document/d/1A3bs1rtbTo42Sgm9hPbLoG1lTGbQ-ITENaLRVyK2Njo/edit#)
     
-##  [GOSemSim](https://github.com/llrs/GOSemSim) 
+##  [GOSemSim](https://github.com/GuangchuangYu/GOSemSim) 
 
 **Purpose**: Calculate similarities between genes using [gene ontologies](http://www.geneontology.org/)
 
@@ -111,3 +102,15 @@ We are using this software as part of a collaboration, as it is aimed to be user
 
 My thesis is about the integration of data, how the microbiome is related to the transcriptome in the inflammatory bowel disease.
 
+## [experDesign](https://github.com/llrs/experDesign)
+
+**Purpose**: A package for preparing the samples to be sequenced in batches
+
+Divides the samples in equal batches, provides methods to select randomly but equilibrated samples. The name is from  expert design and experiment design.
+
+## [RGCCA](https://github.com/llrs/RGCCA)
+
+**Purpose**: Understand better the methods implemented and improve the efficiency.
+
+A fork from CRAN was used to implement tests to the package, speed the functions and add some checks of the input parameters (Using this fork has already saved my some time).
+I also added a function to check an input parameter.
