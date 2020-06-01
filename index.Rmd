@@ -29,11 +29,11 @@ knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
 
 # Projects
 
-You can find [here](https://github.com/llrs?tab=repositories) my repositories. Some of them are projects worth mentioning. This projects are part of my daily work while others I enjoy developing at my own time. They are not ordered chronologically or by any special order. The titles are the link to the webpage or respository.
+You can find [here](https://github.com/llrs?tab=repositories) my repositories. Some of them are projects worth mentioning. This projects are part of my daily work while others I enjoy developing at my own time. They are not ordered chronologically or by any special order. The titles are the link to the webpage or repository.
 
 ## [Bioconductor stats](https://llrs.github.com/BiocStats/) 
 
-**Purpose**:  Analysing packages in Bioconductor by their downloads, IPs and the question for support.
+**Purpose**:  Analyzing packages in Bioconductor by their downloads, IPs and the question for support.
 
 This project is to compare how well the packages in Bioconductor work, track the raise and fall of package usage and how much does affect having a good support. 
     
@@ -114,3 +114,10 @@ Divides the samples in equal batches, provides methods to select randomly but eq
 
 A fork from CRAN was used to implement tests to the package, speed the functions and add some checks of the input parameters (Using this fork has already saved my some time).
 I also added a function to check an input parameter.
+
+## [BOE](https://github.com/rOpenSpain/BOE)
+
+**Purpose**: Help retrieve the data from the official journal of the goverment in Spain
+
+Uses the API of the goverment to retrieve de publications and tidy the output for easy exploration.
+This project was to help a journalist who reads the relevant news each day. I ended up creating a website with some of my analysis: [Histórico del BOE](https://llrs.github.io/BOE_historico/).
